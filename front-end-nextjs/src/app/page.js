@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -10,7 +10,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:8000/generate-qr/?url=${url}`);
+      const response = await axios.post(`http://192.168.160.129:8000/generate-qr/?url=${url}`);
       setQrCodeUrl(response.data.qr_code_url);
     } catch (error) {
       console.error('Error generating QR Code:', error);

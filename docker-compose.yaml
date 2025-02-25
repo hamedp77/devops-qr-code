@@ -1,0 +1,30 @@
+networks:
+  qr-app:
+
+volumes:
+  qr-data:
+    driver: local
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: front-end-nextjs
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - qr-data:/app/public/qrcodes
+    networks:
+      - qr-app
+  backend:
+    container_name: backend
+    build:
+      context: api
+    ports:
+      - "8000:8000"
+    volumes:
+      - qr-data:/app/qrcodes
+    networks:
+      - qr-app

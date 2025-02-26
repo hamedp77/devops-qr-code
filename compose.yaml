@@ -1,0 +1,28 @@
+networks:
+  qr-app:
+
+volumes:
+  qr-data:
+    driver: local
+
+services:
+  frontend:
+    image: hamedp77/qr-gen-frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - qr-data:/app/public/qrcodes
+    networks:
+      - qr-app
+  backend:
+    image: hamedp77/qr-gen-backend:latest
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - qr-data:/app/qrcodes
+    networks:
+      - qr-app

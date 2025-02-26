@@ -1,4 +1,4 @@
-name: Docker Build and Push
+name: Build and Deploy
 
 on:
   push:
@@ -34,3 +34,20 @@ jobs:
             --tag ${{ secrets.DOCKER_USERNAME }}/qr-gen-backend:latest \
             --push \
             api
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Run SSH command
+        uses: garygrossgarten/github-action-ssh@0.8.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: | 
+              cd ~/git-repos/devops-qr-code \
+              && git pull --rebase \
+              && docker compose down \
+              && docker compose -f docker-compose.yaml up -d --build
